@@ -1,0 +1,20 @@
+{
+  "total_images": 99,
+  "raw_images": {
+    "screw_only": 73,
+    "screw_checkerboard": 26
+  },
+  "undistorted_images": {
+    "screw_only": 73,
+    "screw_checkerboard": 26
+  },
+  "labels": {
+    "screw_only": 0,
+    "screw_checkerboard": 0
+  },
+  "splits": {
+    "train": 0,
+    "val": 0,
+    "test": 0
+  }
+}
