@@ -1,20 +1,52 @@
 {
-  "total_images": 99,
-  "raw_images": {
-    "screw_only": 73,
-    "screw_checkerboard": 26
+  "total_images": 58,
+  "total_annotations": 58,
+  "category_distribution": {
+    "screw": 58
   },
-  "undistorted_images": {
-    "screw_only": 73,
-    "screw_checkerboard": 26
+  "resolution": {
+    "avg_width": 3024,
+    "avg_height": 4032,
+    "min_width": 3024,
+    "min_height": 4032,
+    "max_width": 3024,
+    "max_height": 4032,
+    "std_width": 0.0,
+    "std_height": 0.0
   },
-  "labels": {
-    "screw_only": 0,
-    "screw_checkerboard": 0
+  "bbox": {
+    "count": 58,
+    "avg_width": 416.08,
+    "avg_height": 468.36,
+    "avg_area": 174545.28,
+    "min_area": 67021.34,
+    "max_area": 680772.96
+  },
+  "polygon": {
+    "count": 58,
+    "avg_points_per_polygon": 33.43,
+    "min_points": 17,
+    "max_points": 39
   },
   "splits": {
-    "train": 0,
-    "val": 0,
-    "test": 0
-  }
+    "train": {
+      "count": 41,
+      "annotation_count": 41,
+      "ratio": 0.7069
+    },
+    "val": {
+      "count": 12,
+      "annotation_count": 12,
+      "ratio": 0.2069
+    },
+    "test": {
+      "count": 5,
+      "annotation_count": 5,
+      "ratio": 0.0862
+    }
+  },
+  "dataset_size_bytes": 411576279,
+  "dataset_size_human": "392.5 MB",
+  "missing_labels": 0,
+  "images_with_multiple_annotations": 0
 }
