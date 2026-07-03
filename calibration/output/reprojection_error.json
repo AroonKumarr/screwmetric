@@ -1,0 +1,16 @@
+{
+  "mean_reprojection_error": 4.688590181818182,
+  "per_image_errors": {
+    "checkerboard_002.jpg": 5.413651,
+    "checkerboard_003.jpg": 5.889691,
+    "checkerboard_004.jpg": 5.593026,
+    "checkerboard_006.jpg": 5.827276,
+    "checkerboard_007.jpg": 4.607289,
+    "checkerboard_008.jpg": 5.988144,
+    "checkerboard_009.jpg": 3.931845,
+    "checkerboard_011.jpg": 4.276723,
+    "checkerboard_013.jpg": 3.931603,
+    "checkerboard_014.jpg": 3.481901,
+    "checkerboard_015.jpg": 2.633343
+  }
+}
