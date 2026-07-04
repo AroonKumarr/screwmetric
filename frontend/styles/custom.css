@@ -67,16 +67,13 @@ html, body, p, div, span, h1, h2, h3, h4, h5, h6, label, table, tr, td, th {
     border-radius: 0 6px 6px 0 !important;
 }
 
-/* Sidebar user details profile badge at the bottom */
+/* Sidebar user details profile badge */
 .sidebar-profile {
-    position: absolute;
-    bottom: 20px;
-    left: 16px;
-    right: 16px;
     display: flex;
     align-items: center;
     gap: 12px;
     padding: 12px;
+    margin: 12px 0 4px 0;
     background-color: #F8FAFC;
     border: 1px solid #E2E8F0;
     border-radius: 8px;
@@ -331,6 +328,14 @@ html, body, p, div, span, h1, h2, h3, h4, h5, h6, label, table, tr, td, th {
 .stButton>button:hover {
     background-color: #154D92 !important;
     box-shadow: 0 4px 12px rgba(29, 99, 184, 0.25) !important;
+}
+
+/* Fix: hide duplicate upload button label and 200MB small-print */
+[data-testid="stFileUploaderDropzoneInstructions"] small {
+    display: none !important;
+}
+[data-testid="stFileUploaderDropzone"] button span:last-child:not(:first-child) {
+    display: none !important;
 }
 
 /* AI Quality Judgment card styles */
