@@ -85,6 +85,8 @@ if "current_result" not in st.session_state:
     st.session_state.current_result = None
 if "current_image_name" not in st.session_state:
     st.session_state.current_image_name = ""
+if "current_judgment" not in st.session_state:
+    st.session_state.current_judgment = None
 if "theme_mode" not in st.session_state:
     st.session_state.theme_mode = "Light"
 
@@ -265,6 +267,24 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
 # ---------------------------------------------------------------------------
+# AI Quality Judgment & Analysis Callout Card
+# ---------------------------------------------------------------------------
+if st.session_state.current_judgment is not None:
+    judg = st.session_state.current_judgment
+    st.markdown(f"""
+    <div class="judgment-card {judg['class']}">
+        <div class="judgment-header">
+            <span class="judgment-status-badge">{judg['label']}</span>
+            <span class="judgment-title">AI Quality Judgment & Analysis</span>
+        </div>
+        <div class="judgment-theory">
+            <div class="theory-line">🔍 <strong>Line 1 (Classification):</strong> {judg['line1']}</div>
+            <div class="theory-line">💡 <strong>Line 2 (Diagnostics):</strong> {judg['line2']}</div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+# ---------------------------------------------------------------------------
 # Workflow Flowchart visual bar
 # ---------------------------------------------------------------------------
 st.markdown("""
@@ -339,6 +359,11 @@ with col_workspace_left:
             
     # Immediate visual preview
     if loaded_image is not None:
+        if image_name != st.session_state.current_image_name:
+            st.session_state.current_image_name = image_name
+            st.session_state.current_result = None
+            st.session_state.current_judgment = None
+            st.rerun()
         st.image(loaded_image, caption=f"Loaded: {image_name}", use_container_width=True)
         st.markdown("<br>", unsafe_allow_html=True)
         trigger_btn = st.button("🚀 Run Metrology Scan", use_container_width=True)
@@ -436,27 +461,33 @@ if trigger_btn and loaded_image is not None:
                 weak_result = engine.predict(bgr_img)
                 
                 if weak_result is not None:
-                    st.warning(
-                        f"⚠️ **Low Confidence Detection: {weak_result.confidence * 100:.1f}%**\n\n"
-                        f"A screw candidate was found, but its confidence score is **below your setting of {conf_threshold * 100:.1f}%**.\n\n"
-                        "**Possible Diagnostic Issues:**\n"
-                        "1. **Low Contrast**: Dark/rusty screw on dark skin background (low color contrast).\n"
-                        "2. **Poor Lighting**: Excessive shadows or lack of direct illumination.\n"
-                        "3. **Deformed/Dirty Threads**: Corroded screw surface distorting the model's pattern matching.\n\n"
-                        "💡 **How to fix:**\n"
-                        "- Lower the **YOLO Confidence Threshold** slider to see if the segmentation mask is acceptable.\n"
-                        "- Place the screw flat on a high-contrast background (e.g. a plain white paper or white table).\n"
-                        "- Improve illumination or use a clean silver/metallic screw."
-                    )
+                    w_conf = weak_result.confidence
+                    if w_conf < 0.50:
+                        st.session_state.current_judgment = {
+                            "label": "❌ No Screw Detected",
+                            "class": "judgment-error",
+                            "line1": f"Weak candidate found (conf={w_conf * 100:.1f}%), which is below the 50% screw viability threshold.",
+                            "line2": "Feature matching failed to resolve a clear screw silhouette. Place the screw on white paper."
+                        }
+                    else:
+                        st.session_state.current_judgment = {
+                            "label": "⚠️ Faulty Screw Detected",
+                            "class": "judgment-warning",
+                            "line1": f"Screw candidate detected (conf={w_conf * 100:.1f}%) but filtered by confidence slider setting ({conf_threshold * 100:.1f}%).",
+                            "line2": "Low confidence suggests faulty screw features, surface corrosion, or incorrect orientation."
+                        }
                 else:
-                    st.error(
-                        "⚠️ **No Screw Detected**\n\n"
-                        "The segmentation model could not identify any screw-like objects in the image, even at a 1% confidence level.\n\n"
-                        "**Troubleshooting Advice:**\n"
-                        "- Ensure the screw is fully in frame and in sharp focus.\n"
-                        "- Avoid extreme angles or holding the screw vertically.\n"
-                        "- Try using a **Sample Image** from the sidebar first to check the pipeline behavior."
-                    )
+                    st.session_state.current_judgment = {
+                        "label": "❌ No Screw Detected",
+                        "class": "judgment-error",
+                        "line1": "No candidate objects matching a screw pattern were identified in the frame.",
+                        "line2": "Check camera alignment, clean the lens, or try using a validation sample image."
+                    }
+                
+                time.sleep(0.4)
+                status_text.empty()
+                progress_bar.empty()
+                st.rerun()
             else:
                 status_text.markdown("📐 **Step 3/5**: Undistorting lens coordinates...")
                 progress_bar.progress(70)
@@ -481,6 +512,30 @@ if trigger_btn and loaded_image is not None:
                     "image_bgr": bgr_img,
                     "image_name": image_name
                 }
+                
+                # Determine judgment from confidence score
+                c_score = inference_result.confidence
+                if c_score < 0.50:
+                    st.session_state.current_judgment = {
+                        "label": "❌ No Screw Detected",
+                        "class": "judgment-error",
+                        "line1": f"A candidate was segmented but confidence is only {c_score * 100:.1f}% (under 50%).",
+                        "line2": "The silhouette does not match screw geometry; likely non-screw background clutter."
+                    }
+                elif c_score < 0.65:
+                    st.session_state.current_judgment = {
+                        "label": "⚠️ Faulty Screw Detected",
+                        "class": "judgment-warning",
+                        "line1": f"A screw-like object was successfully segmented with moderate match (conf={c_score * 100:.1f}%).",
+                        "line2": "Flaws detected: likely thread corrosion, surface dust, or wrong orientation."
+                    }
+                else:
+                    st.session_state.current_judgment = {
+                        "label": "✅ Valid Screw Detected",
+                        "class": "judgment-success",
+                        "line1": f"Perfect screw segment identified with high validation score (conf={c_score * 100:.1f}%).",
+                        "line2": "Silhouette contour meets expected standard design parameters."
+                    }
                 
                 # Append to history logs
                 st.session_state.history = [{
