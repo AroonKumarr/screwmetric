@@ -178,7 +178,7 @@ class ScrewInferenceEngine:
             imgsz=cfg.input_size,
             device=cfg.device,
             verbose=False,
-            half=cfg.half_precision,
+            quantize=cfg.half_precision,
         )
         elapsed = time.perf_counter() - t0
 
