@@ -267,13 +267,17 @@ class ModelTrainer:
         logger.info("Training device: %s", device)
 
         # ------------------------------------------------------------------
-        # Build Mask R-CNN (no pre-trained download — weights loaded from best.pt)
+        # Build Mask R-CNN with pretrained ResNet-50 backbone (one-time 97MB
+        # download, cached at ~/.cache/torch/hub/checkpoints/ forever after).
+        # Using a pretrained backbone is essential — training from scratch on
+        # only 41 images produces garbage masks.
         # ------------------------------------------------------------------
-        logger.info("Building Mask R-CNN (ResNet-50-FPN) model — offline, no download...")
+        from torchvision.models import ResNet50_Weights  # type: ignore[import]
+        logger.info("Building Mask R-CNN with pretrained ResNet-50 backbone ...")
         model = maskrcnn_resnet50_fpn(
             weights=None,
-            weights_backbone=None,
-            trainable_backbone_layers=5,
+            weights_backbone=ResNet50_Weights.IMAGENET1K_V1,
+            trainable_backbone_layers=3,
         )
 
         # Replace the classifier head for our number of classes (1 class + background)

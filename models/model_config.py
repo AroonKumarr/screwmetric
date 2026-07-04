@@ -78,33 +78,35 @@ def _detect_device() -> str:
 
 @dataclass(frozen=True)
 class TrainingConfig:
-    """Hyperparameters and settings for the YOLOv8-seg training run.
+    """Hyperparameters and settings for the Mask R-CNN training run.
 
     Attributes:
-        model_type: Ultralytics model identifier.
-        input_size: Square image size (pixels). Must be divisible by 32.
-        epochs: Number of training epochs.
-        batch_size: Mini-batch size.
-        patience: Early-stopping patience.
-        learning_rate: Initial learning rate.
-        weight_decay: L2 regularisation weight.
-        warmup_epochs: Epochs of LR warm-up.
-        device: Compute device string.
-        workers: DataLoader worker threads.
-        augment: Enable Ultralytics built-in augmentations.
+        model_type: Architecture identifier — must be 'maskrcnn'.
+        input_size: Square image resize before feeding the network (px, multiple of 32).
+        epochs: Maximum number of training epochs.
+        batch_size: Mini-batch size (keep ≤ 2 on CPU to avoid OOM).
+        patience: Early-stopping patience in epochs.
+        learning_rate: Initial SGD learning rate.
+        momentum: SGD momentum.
+        weight_decay: L2 regularisation coefficient.
+        warmup_epochs: Epochs of LR warm-up (not used in StepLR scheduler).
+        device: Compute device string ('cpu' or 'cuda').
+        workers: DataLoader worker threads (0 = main process, safer on macOS).
+        augment: Enable random horizontal flip augmentation.
         save_period: Save a checkpoint every N epochs (-1 = disabled).
     """
 
     model_type: str = "maskrcnn"
     input_size: int = 640
     epochs: int = 100
-    batch_size: int = 8
+    batch_size: int = 2
     patience: int = 30
-    learning_rate: float = 0.01
+    learning_rate: float = 0.005
+    momentum: float = 0.9
     weight_decay: float = 5e-4
     warmup_epochs: int = 3
     device: str = field(default_factory=_detect_device)
-    workers: int = 4
+    workers: int = 0
     augment: bool = True
     save_period: int = -1
 
