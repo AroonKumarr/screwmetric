@@ -332,10 +332,9 @@ with col_workspace_left:
     
     if input_source == "Upload File":
         uploaded_file = st.file_uploader(
-            "Drop or browse a screw image",
+            "Upload image file",
             type=["png", "jpg", "jpeg"],
-            label_visibility="visible",
-            help="Supported: PNG, JPG, JPEG"
+            label_visibility="collapsed"
         )
         if uploaded_file is not None:
             try:
@@ -396,11 +395,11 @@ with col_workspace_right:
         help="Minimum confidence value required for YOLOv8 segment detection."
     )
     
-    with st.expander("👁️ Visualization Overlays", expanded=False):
-        show_mask = st.checkbox("Overlay Segmentation Mask", value=True)
-        show_contour = st.checkbox("Overlay Contour Outline", value=True)
-        show_bbox = st.checkbox("Overlay Fitted Rotated BBox", value=True)
-        show_dimensions = st.checkbox("Overlay Dimension Annotations", value=True)
+    st.markdown("#### 👁️ Visualization Overlays")
+    show_mask = st.checkbox("Overlay Segmentation Mask", value=True)
+    show_contour = st.checkbox("Overlay Contour Outline", value=True)
+    show_bbox = st.checkbox("Overlay Fitted Rotated BBox", value=True)
+    show_dimensions = st.checkbox("Overlay Dimension Annotations", value=True)
     
     st.markdown("</div>", unsafe_allow_html=True)
 
