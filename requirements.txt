@@ -17,3 +17,6 @@ PyYAML>=6.0.0
 pytest>=8.0.0
 pytest-cov>=5.0.0
 
+# Frontend UI
+streamlit>=1.30.0
+
