@@ -178,7 +178,7 @@ class ScrewInferenceEngine:
             imgsz=cfg.input_size,
             device=cfg.device,
             verbose=False,
-            quantize=cfg.half_precision,
+            # NOTE: half/quantize kwarg is for export only, not predict()
         )
         elapsed = time.perf_counter() - t0
 
