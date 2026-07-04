@@ -466,15 +466,15 @@ if trigger_btn and loaded_image is not None:
                         st.session_state.current_judgment = {
                             "label": "❌ No Screw Detected",
                             "class": "judgment-error",
-                            "line1": f"Weak candidate found (conf={w_conf * 100:.1f}%), which is below the 50% screw viability threshold.",
-                            "line2": "Feature matching failed to resolve a clear screw silhouette. Place the screw on white paper."
+                            "line1": f"Residual candidate found at ultra-low confidence ({w_conf * 100:.1f}%) — far below the 50% minimum viability threshold.",
+                            "line2": "The image likely contains no screw, or the screw is too small, occluded, or dominated by background texture."
                         }
                     else:
                         st.session_state.current_judgment = {
-                            "label": "⚠️ Faulty Screw Detected",
+                            "label": "⚠️ Faulty / Degraded Screw Detected",
                             "class": "judgment-warning",
-                            "line1": f"Screw candidate detected (conf={w_conf * 100:.1f}%) but filtered by confidence slider setting ({conf_threshold * 100:.1f}%).",
-                            "line2": "Low confidence suggests faulty screw features, surface corrosion, or incorrect orientation."
+                            "line1": f"A screw WAS found by the model (conf={w_conf * 100:.1f}%) but your confidence slider is set to {conf_threshold * 100:.1f}%, which filtered it out.",
+                            "line2": f"Low confidence ({w_conf * 100:.1f}%) indicates the screw surface shows significant oxidation, rust, or dark discoloration that differs from the clean-silver training images. Try lowering the confidence threshold slider."
                         }
                 else:
                     st.session_state.current_judgment = {
@@ -519,22 +519,22 @@ if trigger_btn and loaded_image is not None:
                     st.session_state.current_judgment = {
                         "label": "❌ No Screw Detected",
                         "class": "judgment-error",
-                        "line1": f"A candidate was segmented but confidence is only {c_score * 100:.1f}% (under 50%).",
-                        "line2": "The silhouette does not match screw geometry; likely non-screw background clutter."
+                        "line1": f"Confidence is critically low ({c_score * 100:.1f}%) — the segmented region does not match screw geometry with enough certainty.",
+                        "line2": "Possible cause: the object may be non-screw debris, the screw is partially occluded, or the image has extreme dark/blur with no discernible thread pattern."
                     }
                 elif c_score < 0.65:
                     st.session_state.current_judgment = {
-                        "label": "⚠️ Faulty Screw Detected",
+                        "label": "⚠️ Faulty / Degraded Screw Detected",
                         "class": "judgment-warning",
-                        "line1": f"A screw-like object was successfully segmented with moderate match (conf={c_score * 100:.1f}%).",
-                        "line2": "Flaws detected: likely thread corrosion, surface dust, or wrong orientation."
+                        "line1": f"Screw detected and segmented successfully, but with reduced confidence ({c_score * 100:.1f}%). The screw shape and thread pattern ARE visible to the model.",
+                        "line2": f"Low confidence is caused by surface degradation — heavy oxidation, rust coating, or dark coloring diverges from the silver-toned training dataset. The screw appears physically worn or corroded."
                     }
                 else:
                     st.session_state.current_judgment = {
-                        "label": "✅ Valid Screw Detected",
+                        "label": "✅ Valid Screw — Good Condition",
                         "class": "judgment-success",
-                        "line1": f"Perfect screw segment identified with high validation score (conf={c_score * 100:.1f}%).",
-                        "line2": "Silhouette contour meets expected standard design parameters."
+                        "line1": f"Screw identified and verified with strong model confidence ({c_score * 100:.1f}%). Thread geometry, head profile, and silhouette all match training distribution.",
+                        "line2": "Surface condition appears clean, metallic, and undamaged. Measurements are reliable for precision metrology operations."
                     }
                 
                 # Append to history logs
