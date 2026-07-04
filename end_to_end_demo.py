@@ -2,7 +2,7 @@
 ScrewMetric — End-to-End Metrology Pipeline Demo
 ===================================================
 Orchestrates the entire ScrewMetric pipeline: loads an image, runs
-YOLOv8-seg inference to detect/segment a screw, undistorts the contour
+Mask R-CNN inference to detect/segment a screw, undistorts the contour
 points, performs pixel-to-mm transformation, and prints a structured
 JSON result. Optionally saves a visualization of the measurement.
 

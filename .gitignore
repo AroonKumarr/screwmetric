@@ -21,18 +21,18 @@ env/
 *.log
 
 # Generated outputs (dataset pipeline)
-dataset/previews/
-dataset/splits/
-dataset/validation_report.json
-dataset/dataset_stats.json
+# dataset/previews/
+# dataset/splits/
+# dataset/validation_report.json
+# dataset/dataset_stats.json
 
 # Calibration outputs
-calibration/output/
+# calibration/output/
 
 # Model training artifacts
-models/weights/
-models/logs/
-models/configs/
+# models/weights/
+# models/logs/
+# models/configs/
 
 # MLflow experiment tracking
 runs/

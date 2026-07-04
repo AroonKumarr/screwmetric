@@ -1,8 +1,8 @@
 """
-ScrewMetric — Inference Engine
-================================
-Loads a trained YOLOv8-seg model and performs screw segmentation
-inference on single images or batches.
+ScrewMetric — Inference Engine (Mask R-CNN)
+============================================
+Loads a trained torchvision Mask R-CNN model and performs screw
+segmentation inference on single images or batches.
 
 Responsibility (Single Responsibility Principle):
     Model loading and inference only. No measurement, no training.
@@ -82,7 +82,7 @@ class InferenceResult:
 # ---------------------------------------------------------------------------
 
 class ScrewInferenceEngine:
-    """Loads a trained YOLOv8-seg model and runs screw segmentation.
+    """Loads a trained Mask R-CNN model and runs screw segmentation.
 
     Args:
         config: Pipeline model configuration.
@@ -98,7 +98,7 @@ class ScrewInferenceEngine:
 
     def __init__(self, config: ModelConfig) -> None:
         self._config = config
-        self._model: Any = None  # Ultralytics YOLO object (lazy-loaded)
+        self._model: Any = None  # PyTorch Mask R-CNN model (lazy-loaded)
 
     # ------------------------------------------------------------------
     # Model lifecycle
@@ -109,15 +109,9 @@ class ScrewInferenceEngine:
 
         Raises:
             FileNotFoundError: If the weights file does not exist.
-            ImportError: If Ultralytics is not installed.
+            ImportError: If torch/torchvision is not installed.
         """
-        try:
-            from ultralytics import YOLO  # type: ignore[import]
-        except ImportError as exc:
-            raise ImportError(
-                "Ultralytics is not installed. Run: pip install ultralytics"
-            ) from exc
-
+        # Bug 1 Fix: check weights file existence BEFORE trying to import packages or load model
         weights_path = self._config.paths.best_weights_path
         if not weights_path.exists():
             raise FileNotFoundError(
@@ -125,8 +119,39 @@ class ScrewInferenceEngine:
                 "Train the model first: python models/model_trainer.py"
             )
 
-        logger.info("Loading model weights from: %s", weights_path)
-        self._model = YOLO(str(weights_path))
+        try:
+            import torch
+            import torchvision  # type: ignore[import]
+            from torchvision.models.detection import (  # type: ignore[import]
+                maskrcnn_resnet50_fpn,
+                MaskRCNN_ResNet50_FPN_Weights,
+            )
+            from torchvision.models.detection.faster_rcnn import FastRCNNPredictor  # type: ignore[import]
+            from torchvision.models.detection.mask_rcnn import MaskRCNNPredictor  # type: ignore[import]
+        except ImportError as exc:
+            raise ImportError(
+                "torch and torchvision are required. Run: pip install torch torchvision"
+            ) from exc
+
+        logger.info("Loading Mask R-CNN model weights from: %s", weights_path)
+
+        # Re-build model structure matching training
+        model = maskrcnn_resnet50_fpn(
+            weights=MaskRCNN_ResNet50_FPN_Weights.DEFAULT,
+            trainable_backbone_layers=0,
+        )
+        num_classes = 2  # background (0) + screw (1)
+        in_features = model.roi_heads.box_predictor.cls_score.in_features
+        model.roi_heads.box_predictor = FastRCNNPredictor(in_features, num_classes)
+        in_features_mask = model.roi_heads.mask_predictor.conv5_mask.in_channels
+        model.roi_heads.mask_predictor = MaskRCNNPredictor(in_features_mask, 256, num_classes)
+
+        # Load weights onto CPU
+        state = torch.load(str(weights_path), map_location="cpu", weights_only=True)
+        model.load_state_dict(state)
+        model.eval()
+
+        self._model = model
         logger.info("Model loaded — type: %s", self._config.training.model_type)
 
     @property
@@ -160,7 +185,14 @@ class ScrewInferenceEngine:
                 "Model is not loaded. Call load_model() first."
             )
 
-        # Resolve image to numpy array
+        try:
+            import torch
+            from torchvision.transforms import functional as F
+            from PIL import Image as PILImage
+        except ImportError:
+            raise ImportError("PyTorch is required for running inference.")
+
+        # Resolve image to numpy array (BGR)
         if isinstance(image, (str, Path)):
             bgr = load_image(Path(image))
         else:
@@ -168,40 +200,64 @@ class ScrewInferenceEngine:
 
         image_shape = (bgr.shape[0], bgr.shape[1])
 
+        # Preprocess: convert BGR NumPy array to PIL RGB -> PyTorch Tensor
+        rgb_img = cv2.cvtColor(bgr, cv2.COLOR_BGR2RGB)
+        pil_img = PILImage.fromarray(rgb_img)
+        
         cfg = self._config.inference
+        # Resize to input_size for faster processing matching training
+        size = cfg.input_size
+        pil_img_resized = pil_img.resize((size, size))
+        tensor_img = F.to_tensor(pil_img_resized)
+
         t0 = time.perf_counter()
-        results = self._model.predict(
-            source=bgr,
-            conf=cfg.confidence_threshold,
-            iou=cfg.iou_threshold,
-            max_det=cfg.max_detections,
-            imgsz=cfg.input_size,
-            device=cfg.device,
-            verbose=False,
-            # NOTE: half/quantize kwarg is for export only, not predict()
-        )
+        with torch.no_grad():
+            preds = self._model([tensor_img])[0]
         elapsed = time.perf_counter() - t0
 
-        if not results:
+        if not preds or "scores" not in preds or len(preds["scores"]) == 0:
             logger.warning("Inference returned no results.")
             return None
 
-        result = results[0]
+        scores = preds["scores"].cpu().numpy()
+        labels = preds["labels"].cpu().numpy()
+        masks = preds["masks"].cpu().numpy()
+        boxes = preds["boxes"].cpu().numpy()
 
-        # Extract mask for the best (largest) detection
-        mask = extract_largest_mask(result.masks, image_shape)
-        if mask is None:
-            logger.info("No segmentation mask found — screw not detected.")
+        # Find valid indices: class is screw (1) and confidence above threshold
+        valid_indices = [
+            i for i, (score, label) in enumerate(zip(scores, labels))
+            if label == 1 and score >= cfg.confidence_threshold
+        ]
+
+        if not valid_indices:
+            logger.info("No screw detected above confidence threshold.")
             return None
 
-        # Get confidence of the highest-scoring box
-        confidence = extract_confidence(result, best_idx=0)
-        if confidence < cfg.confidence_threshold:
-            logger.info(
-                "Detection confidence %.3f below threshold %.3f",
-                confidence, cfg.confidence_threshold,
-            )
+        # Filter predictions
+        valid_masks = masks[valid_indices]
+        valid_scores = scores[valid_indices]
+        valid_boxes = boxes[valid_indices]
+
+        # Resize masks back to original image shape and find the largest
+        resized_masks = []
+        h, w = image_shape
+        for m in valid_masks:
+            m_sq = m.squeeze(0)  # shape (size, size)
+            m_res = cv2.resize(m_sq, (w, h), interpolation=cv2.INTER_LINEAR)
+            resized_masks.append(m_res)
+
+        # Extract mask of the largest detection
+        mask_tuple = extract_largest_mask(np.stack(resized_masks), image_shape)
+        if mask_tuple is None:
+            logger.info("No segmentation mask found.")
             return None
+
+        mask, best_idx = mask_tuple
+
+        # Bug 2 Fix: extract confidence using best_idx corresponding to the largest mask area
+        actual_global_idx = valid_indices[best_idx]
+        confidence = float(scores[actual_global_idx])
 
         try:
             bbox = extract_bounding_box(mask)
@@ -211,12 +267,6 @@ class ScrewInferenceEngine:
 
         # Class label
         class_name = cfg.class_names[0] if cfg.class_names else "screw"
-        try:
-            cls_idx = int(result.boxes.cls[0].item())
-            if cls_idx < len(cfg.class_names):
-                class_name = cfg.class_names[cls_idx]
-        except (AttributeError, IndexError):
-            pass
 
         logger.info(
             "Detected '%s'  conf=%.3f  bbox=%s  time=%.3fs",
@@ -255,17 +305,14 @@ class ScrewInferenceEngine:
 def main() -> None:
     """Demonstrate the inference engine with a synthetic screw-like image."""
     print("=" * 64)
-    print("  ScrewMetric — Inference Engine Module")
+    print("  ScrewMetric — Mask R-CNN Inference Engine Module")
     print("=" * 64)
-
-    import tempfile
-    import cv2
 
     try:
         config = ModelConfig.default()
+        engine = ScrewInferenceEngine(config)
 
         # -- demonstrate model not loaded error
-        engine = ScrewInferenceEngine(config)
         try:
             engine.predict(np.zeros((10, 10, 3), dtype=np.uint8))
             raise AssertionError("Should have raised RuntimeError")

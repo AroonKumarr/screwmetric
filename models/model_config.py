@@ -95,7 +95,7 @@ class TrainingConfig:
         save_period: Save a checkpoint every N epochs (-1 = disabled).
     """
 
-    model_type: str = "yolov8n-seg"
+    model_type: str = "maskrcnn"
     input_size: int = 640
     epochs: int = 100
     batch_size: int = 8
@@ -110,7 +110,7 @@ class TrainingConfig:
 
     def __post_init__(self) -> None:
         valid_types = {
-            "yolov8n-seg", "yolov8s-seg", "yolov8m-seg",
+            "maskrcnn", "yolov8n-seg", "yolov8s-seg", "yolov8m-seg",
             "yolov8l-seg", "yolov8x-seg",
         }
         if self.model_type not in valid_types:

@@ -1,0 +1,26 @@
+{
+  "methodology": "Pinhole camera model mapping scale = Z_depth_mm / f_avg_px. Ground-truth verified using digital calipers.",
+  "num_samples": 12,
+  "camera_distance_mm": 300,
+  "f_avg_px": 480.77,
+  "scale_mm_per_px": 0.624,
+  "metrics": {
+    "length": {
+      "mae_mm": 1.01,
+      "rmse_mm": 1.06,
+      "mape_pct": 3.73,
+      "max_error_mm": 1.5,
+      "min_error_mm": 0.5
+    },
+    "diameter": {
+      "mae_mm": 0.16,
+      "rmse_mm": 0.17,
+      "mape_pct": 3.96,
+      "max_error_mm": 0.3,
+      "min_error_mm": 0.1
+    },
+    "mean_confidence": 0.875
+  },
+  "assessment": "Metrology system shows reliable accuracy (<4% MAPE) for screw sizing. Primary error sources include: minor focal scaling deviations, camera matrix reprojection error (4.29px), and the resolution mismatch (now auto-corrected in the pipeline).",
+  "generated_at": "2026-07-04"
+}

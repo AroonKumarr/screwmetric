@@ -1,0 +1,33 @@
+image_width: 1280
+image_height: 960
+camera_matrix:
+  rows: 3
+  cols: 3
+  data:
+  - 476.1890141265692
+  - 0.0
+  - 516.793385620849
+  - 0.0
+  - 485.3600055421218
+  - 460.53921357059687
+  - 0.0
+  - 0.0
+  - 1.0
+dist_coeffs:
+  rows: 1
+  cols: 5
+  data:
+  - -0.2157892704990363
+  - 0.09274756518066166
+  - -0.0065775903469869265
+  - 0.0012048147052939882
+  - -0.018568467735350983
+focal_length_fx: 476.189
+focal_length_fy: 485.36
+principal_point_cx: 516.7934
+principal_point_cy: 460.5392
+reprojection_error: 4.292139
+checkerboard_inner_corners_x: 9
+checkerboard_inner_corners_y: 6
+square_size_mm: 25.0
+date_created: '2026-07-04T05:49:16.569498+00:00'

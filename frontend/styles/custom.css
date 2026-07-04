@@ -330,22 +330,6 @@ html, body, p, div, span, h1, h2, h3, h4, h5, h6, label, table, tr, td, th {
     box-shadow: 0 4px 12px rgba(29, 99, 184, 0.25) !important;
 }
 
-/* Fix: hide duplicate upload button label and 200MB small-print */
-[data-testid="stFileUploaderDropzoneInstructions"] small,
-[data-testid="stFileUploaderDropzoneInstructions"] span,
-[data-testid="stFileUploaderDropzone"] section small,
-[data-testid="stFileUploaderDropzone"] > div > small,
-.stFileUploader small {
-    display: none !important;
-}
-[data-testid="stFileUploaderDropzone"] button span:not(:first-child) {
-    /* Keep child spans visible but ensure they don't overlap — normalize
-       display and positioning to avoid stacked/duplicated rendering on
-       some browsers. */
-    display: inline-block !important;
-    position: static !important;
-    line-height: 1.2 !important;
-    vertical-align: middle !important;
 }
 
 /* Extra safeguard: make sure uploader instruction small text is hidden

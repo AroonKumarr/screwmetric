@@ -86,60 +86,75 @@ def preprocess_image(
 def extract_largest_mask(
     masks: Any,
     image_shape: tuple[int, int],
-) -> np.ndarray | None:
+) -> tuple[np.ndarray, int] | None:
     """Extract the binary mask of the largest (highest-area) detection.
 
     Args:
-        masks: Ultralytics ``Masks`` object from a prediction result.
-            ``None`` or empty is handled gracefully.
+        masks: Mask data tensor or NumPy array (N, H, W) or (N, 1, H, W).
         image_shape: ``(height, width)`` of the original image.
 
     Returns:
-        Binary ``uint8`` mask of shape ``(H, W)`` with values 0/255,
-        or ``None`` if no masks are present.
+        Tuple ``(binary_mask, best_idx)``, or ``None`` if no masks are present.
     """
     if masks is None:
         return None
 
-    try:
-        mask_data = masks.data.cpu().numpy()  # shape (N, H, W)
-    except AttributeError:
-        return None
+    if isinstance(masks, np.ndarray):
+        mask_data = masks
+    else:
+        try:
+            mask_data = masks.cpu().numpy()  # shape (N, H, W) or (N, 1, H, W)
+        except AttributeError:
+            try:
+                mask_data = np.array(masks)
+            except Exception:
+                return None
 
-    if mask_data.shape[0] == 0:
+    if len(mask_data.shape) == 4:
+        mask_data = np.squeeze(mask_data, axis=1)
+
+    if len(mask_data.shape) != 3 or mask_data.shape[0] == 0:
         return None
 
     # Select the mask with the largest area
     areas = [m.sum() for m in mask_data]
     best_idx = int(np.argmax(areas))
-    mask_f = mask_data[best_idx]  # float, 0.0–1.0
+    mask_f = mask_data[best_idx]  # float, 0.0–1.0 or uint8 0/255
 
     # Resize back to original image dimensions
     h, w = image_shape
-    mask_resized = cv2.resize(mask_f, (w, h), interpolation=cv2.INTER_NEAREST)
+    mask_resized = cv2.resize(mask_f.astype(np.float32), (w, h), interpolation=cv2.INTER_NEAREST)
     binary = (mask_resized > 0.5).astype(np.uint8) * 255
-    return binary
+    return binary, best_idx
 
 
 def extract_confidence(result: Any, best_idx: int = 0) -> float:
     """Extract the confidence score for a specific detection.
 
     Args:
-        result: Ultralytics result object.
-        best_idx: Index of the detection (0 = highest confidence by default).
+        result: Dictionary or result object containing confidence scores.
+        best_idx: Index of the detection.
 
     Returns:
         Confidence score in ``[0.0, 1.0]``, or ``0.0`` if unavailable.
     """
     try:
-        boxes = result.boxes
-        if boxes is None or len(boxes) == 0:
+        if isinstance(result, dict):
+            confs = result.get("scores", [])
+        else:
+            confs = getattr(result, "scores", [])
+            if len(confs) == 0:
+                confs = getattr(getattr(result, "boxes", None), "conf", [])
+
+        try:
+            confs_arr = confs.cpu().numpy()
+        except AttributeError:
+            confs_arr = np.array(confs)
+
+        if len(confs_arr) == 0 or best_idx >= len(confs_arr):
             return 0.0
-        confs = boxes.conf.cpu().numpy()
-        if best_idx >= len(confs):
-            return 0.0
-        return float(confs[best_idx])
-    except (AttributeError, IndexError):
+        return float(confs_arr[best_idx])
+    except Exception:
         return 0.0
 
 

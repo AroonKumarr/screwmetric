@@ -2,7 +2,7 @@
 ScrewMetric — Streamlit Dashboard Application
 ================================================
 A modern, light cool-blue themed premium Streamlit dashboard for industrial AI
-screw dimension measurement. Integrates with the existing YOLOv8-seg model and
+screw dimension measurement. Integrates with the existing Mask R-CNN model and
 OpenCV monocular camera calibration backend.
 
 Usage:
@@ -67,7 +67,7 @@ if css_path.exists():
 # ---------------------------------------------------------------------------
 @st.cache_resource(show_spinner=False)
 def get_cached_inference_engine() -> tuple[ScrewInferenceEngine | None, str | None]:
-    """Load and cache the YOLOv8-seg inference engine."""
+    """Load and cache the Mask R-CNN inference engine."""
     try:
         cfg = ModelConfig.default()
         engine = ScrewInferenceEngine(cfg)
@@ -168,7 +168,7 @@ with st.sidebar:
     
     st.markdown("<div class='nav-section-title'>METROLOGY CONTEXT</div>", unsafe_allow_html=True)
     st.markdown("<div class='nav-item'>📷 Camera Calibration</div>", unsafe_allow_html=True)
-    st.markdown("<div class='nav-item'>🧠 YOLOv8 Trainer</div>", unsafe_allow_html=True)
+    st.markdown("<div class='nav-item'>🧠 Mask R-CNN Trainer</div>", unsafe_allow_html=True)
     
     st.markdown("<div class='nav-section-title'>PREFERENCES</div>", unsafe_allow_html=True)
     theme_choice = st.selectbox("Theme Mode", ["Light", "Dark"], index=0 if st.session_state.theme_mode == "Light" else 1)
@@ -217,7 +217,7 @@ if st.session_state.current_result is not None:
     m_time = f"{res['elapsed_time'] * 1000:.1f} ms"
     m_length_sub = f"Pixel size: {res['measurement'].pixel_length:.1f} px"
     m_diameter_sub = f"Pixel size: {res['measurement'].pixel_diameter:.1f} px"
-    m_conf_sub = "YOLOv8 Segmentation"
+    m_conf_sub = "Mask R-CNN Segmenter"
     m_time_sub = "CPU Latency"
 else:
     m_length = "—"
@@ -389,12 +389,12 @@ with col_workspace_right:
     )
     
     conf_threshold = st.slider(
-        "🎯 YOLO Confidence Threshold",
+        "🎯 Model Confidence Threshold",
         min_value=0.05,
         max_value=1.00,
         value=0.25,
         step=0.05,
-        help="Minimum confidence value required for YOLOv8 segment detection."
+        help="Minimum confidence value required for Mask R-CNN segment detection."
     )
     
     st.markdown("#### 👁️ Visualization Overlays")
@@ -413,7 +413,7 @@ if trigger_btn and loaded_image is not None:
     calib_ok = check_calibration_status()["exists"]
     
     if not weights_ok:
-        st.error("❌ Scan Blocked: YOLOv8 model weights `best.pt` missing in `models/weights/` directory.")
+        st.error("❌ Scan Blocked: Mask R-CNN model weights `best.pt` missing in `models/weights/` directory.")
     elif not calib_ok:
         st.error("❌ Scan Blocked: Camera calibration parameters missing in `calibration/output/` directory.")
     else:
@@ -421,7 +421,7 @@ if trigger_btn and loaded_image is not None:
         status_text = st.empty()
         
         try:
-            status_text.markdown("⌛ **Step 1/5**: Loading cached YOLOv8 Segmentation model...")
+            status_text.markdown("⌛ **Step 1/5**: Loading cached Mask R-CNN Segmentation model...")
             progress_bar.progress(20)
             engine, load_error = get_cached_inference_engine()
             

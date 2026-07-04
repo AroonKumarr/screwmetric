@@ -1,0 +1,7 @@
+path: /Users/aroonkumar/Downloads/sem_6 Downloads/Control Room/screwmetric/dataset/splits
+train: train/images
+val: val/images
+test: test/images
+nc: 1
+names:
+- screw

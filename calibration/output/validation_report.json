@@ -1,0 +1,25 @@
+{
+  "total_images_found": 15,
+  "readable_images": 15,
+  "corrupted_images": [],
+  "unsupported_extensions": [],
+  "duplicate_filenames": [],
+  "images_with_corners": 10,
+  "images_without_corners": [
+    "checkerboard_004.jpg",
+    "checkerboard_005.jpg",
+    "checkerboard_008.jpg",
+    "checkerboard_010.jpg",
+    "checkerboard_012.jpg"
+  ],
+  "inconsistent_resolutions": [],
+  "majority_resolution": [
+    1280,
+    960
+  ],
+  "min_images_required": 10,
+  "errors": [],
+  "warnings": [],
+  "validation_duration_s": 0.59,
+  "is_valid": true
+}

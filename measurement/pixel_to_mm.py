@@ -303,15 +303,49 @@ class PixelToMMConverter:
         assert self._scale is not None
         return pixel_distance * self._scale
 
-    def undistort_contour(self, contour: np.ndarray) -> np.ndarray:
+    def get_scaled_intrinsics(self, current_shape: tuple[int, int]) -> tuple[np.ndarray, float]:
+        """Scale the intrinsic camera matrix K to match the current image resolution.
+
+        Baseline calibration resolution is inferred from K:
+            - If cx < 400: baseline is 640x480
+            - Otherwise: baseline is 1280x960
+        """
+        self._ensure_calibrated()
+        assert self._K is not None
+        h, w = current_shape
+        
+        # Infer baseline calibration dimensions dynamically from K
+        cx = float(self._K[0, 2])
+        if cx < 400.0:
+            calib_w, calib_h = 640.0, 480.0
+        else:
+            calib_w, calib_h = 1280.0, 960.0
+
+        scale_x = w / calib_w
+        scale_y = h / calib_h
+
+        K_scaled = self._K.copy()
+        K_scaled[0, 0] *= scale_x  # fx
+        K_scaled[1, 1] *= scale_y  # fy
+        K_scaled[0, 2] *= scale_x  # cx
+        K_scaled[1, 2] *= scale_y  # cy
+
+        fx = K_scaled[0, 0]
+        fy = K_scaled[1, 1]
+        f_avg = (fx + fy) / 2.0
+        scale_mm_per_px = self._config.known_distance_mm / f_avg
+
+        return K_scaled, scale_mm_per_px
+
+    def undistort_contour(self, contour: np.ndarray, image_shape: tuple[int, int] = (960, 1280)) -> np.ndarray:
         """Correct lens distortion on a contour's pixel coordinates.
 
-        Uses ``cv2.undistortPoints`` with the full camera matrix to map
-        distorted image-plane coordinates to undistorted coordinates.
+        Uses ``cv2.undistortPoints`` with the dynamically scaled camera matrix.
 
         Args:
             contour: Contour array of shape (N, 1, 2) as returned by
                 ``cv2.findContours``.
+            image_shape: The (height, width) of the image the mask was taken from.
 
         Returns:
             Undistorted contour of the same shape.
@@ -322,8 +356,9 @@ class PixelToMMConverter:
         self._ensure_calibrated()
         assert self._K is not None and self._D is not None
 
+        K_scaled, _ = self.get_scaled_intrinsics(image_shape)
         pts = contour.reshape(-1, 1, 2).astype(np.float32)
-        undistorted = cv2.undistortPoints(pts, self._K, self._D, P=self._K)
+        undistorted = cv2.undistortPoints(pts, K_scaled, self._D, P=K_scaled)
         return undistorted.reshape(-1, 1, 2)
 
     def fit_rotated_rect(
@@ -361,7 +396,7 @@ class PixelToMMConverter:
 
         Steps:
             1. Extract contour from mask.
-            2. Undistort contour points.
+            2. Undistort contour points using scaled intrinsics.
             3. Fit rotated rectangle → major/minor axes.
             4. Convert to mm using pinhole scale.
 
@@ -379,22 +414,24 @@ class PixelToMMConverter:
         self._ensure_calibrated()
 
         contour = self._get_contour(mask)
-        undistorted = self.undistort_contour(contour)
+        undistorted = self.undistort_contour(contour, mask.shape)
         major_px, minor_px = self.fit_rotated_rect(undistorted)
+
+        # Scale calculation based on shape
+        _, scale_mm_per_px = self.get_scaled_intrinsics(mask.shape)
 
         # Angle of the fitted rectangle
         _, _, angle = cv2.minAreaRect(undistorted) if len(undistorted) >= 5 else (
             (0, 0), (major_px, minor_px), 0.0
         )
 
-        assert self._scale is not None
-        length_mm = major_px * self._scale
-        diameter_mm = minor_px * self._scale
+        length_mm = major_px * scale_mm_per_px
+        diameter_mm = minor_px * scale_mm_per_px
 
         logger.info(
             "Measurement — length=%.2f mm  diameter=%.2f mm  "
             "(major=%.1f px  minor=%.1f px  scale=%.6f mm/px)",
-            length_mm, diameter_mm, major_px, minor_px, self._scale,
+            length_mm, diameter_mm, major_px, minor_px, scale_mm_per_px,
         )
 
         return ScrewMeasurement(
@@ -403,7 +440,7 @@ class PixelToMMConverter:
             confidence=round(float(confidence), 4),
             pixel_length=round(major_px, 2),
             pixel_diameter=round(minor_px, 2),
-            scale_mm_per_px=round(self._scale, 6),
+            scale_mm_per_px=round(scale_mm_per_px, 6),
             method="focal_length_pinhole",
             rect_angle_deg=round(float(angle), 2),
         )

@@ -1,0 +1,57 @@
+{
+  "num_images_total": 15,
+  "num_images_successful": 10,
+  "num_images_failed": 5,
+  "image_resolution": [
+    1280,
+    960
+  ],
+  "checkerboard_inner_corners": [
+    9,
+    6
+  ],
+  "square_size_mm": 25.0,
+  "camera_matrix": [
+    [
+      476.1890141265692,
+      0.0,
+      516.793385620849
+    ],
+    [
+      0.0,
+      485.3600055421218,
+      460.53921357059687
+    ],
+    [
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "dist_coeffs": [
+    -0.2157892704990363,
+    0.09274756518066166,
+    -0.0065775903469869265,
+    0.0012048147052939882,
+    -0.018568467735350983
+  ],
+  "focal_length_fx": 476.189,
+  "focal_length_fy": 485.36,
+  "principal_point_cx": 516.7934,
+  "principal_point_cy": 460.5392,
+  "mean_reprojection_error": 4.292139,
+  "per_image_errors": {
+    "checkerboard_001.jpg": 4.264443,
+    "checkerboard_002.jpg": 4.409709,
+    "checkerboard_003.jpg": 6.128317,
+    "checkerboard_006.jpg": 6.524928,
+    "checkerboard_007.jpg": 4.147122,
+    "checkerboard_009.jpg": 3.527237,
+    "checkerboard_011.jpg": 6.216318,
+    "checkerboard_013.jpg": 2.761264,
+    "checkerboard_014.jpg": 3.182092,
+    "checkerboard_015.jpg": 1.759963
+  },
+  "calibration_date": "2026-07-04T05:49:16.569339+00:00",
+  "execution_time_s": 0.02
+}
