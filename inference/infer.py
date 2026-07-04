@@ -281,7 +281,7 @@ def main() -> None:
             print(f"[ImportError]         ✓  ({exc})")
 
         # -- demonstrate utils work with synthetic mask
-        from utils import extract_bounding_box, mask_to_polygon  # type: ignore
+        from infer_utils import extract_bounding_box, mask_to_polygon  # type: ignore
         mask = np.zeros((100, 100), dtype=np.uint8)
         mask[20:80, 30:70] = 255
         bbox = extract_bounding_box(mask)
