@@ -43,6 +43,7 @@ from helpers import (  # type: ignore[import]
     pil_to_bgr,
     bgr_to_pil,
     get_sample_images,
+    get_project_paths,
 )
 
 # ---------------------------------------------------------------------------
@@ -490,6 +491,7 @@ if st.session_state.current_result is not None:
             cv2.addWeighted(canvas, 1.0, overlay, 0.35, 0, canvas)
             
         contour = extract_contour(mask)
+        display_contour = None  # safe default
         if contour is not None:
             cal_check = check_calibration_status()
             if cal_check["exists"]:
@@ -599,7 +601,11 @@ if st.session_state.current_result is not None:
         with tech_col2:
             st.markdown("#### 🧠 Model Spec")
             st.markdown(f"**Weights Checkpoint:** `best.pt`")
-            st.markdown(f"**Inference Device:** `{engine._config.inference.device}`")
+            _engine, _ = get_cached_inference_engine()
+            if _engine:
+                st.markdown(f"**Inference Device:** `{_engine._config.inference.device}`")
+            else:
+                st.markdown("**Inference Device:** `N/A — model not loaded`")
             st.markdown(f"**Image Dimensions:** `{inf.image_shape[1]} x {inf.image_shape[0]} px`")
             st.markdown(f"**Contour Coordinates Count:** `{len(display_contour) if display_contour is not None else 0}`")
             
