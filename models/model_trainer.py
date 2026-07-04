@@ -267,12 +267,13 @@ class ModelTrainer:
         logger.info("Training device: %s", device)
 
         # ------------------------------------------------------------------
-        # Build Mask R-CNN with COCO-pretrained backbone
+        # Build Mask R-CNN (no pre-trained download — weights loaded from best.pt)
         # ------------------------------------------------------------------
-        logger.info("Building Mask R-CNN (ResNet-50-FPN) model...")
+        logger.info("Building Mask R-CNN (ResNet-50-FPN) model — offline, no download...")
         model = maskrcnn_resnet50_fpn(
-            weights=MaskRCNN_ResNet50_FPN_Weights.DEFAULT,
-            trainable_backbone_layers=3,
+            weights=None,
+            weights_backbone=None,
+            trainable_backbone_layers=5,
         )
 
         # Replace the classifier head for our number of classes (1 class + background)
@@ -501,7 +502,8 @@ class ModelTrainer:
 
         device = torch.device("cpu")
         model = maskrcnn_resnet50_fpn(
-            weights=MaskRCNN_ResNet50_FPN_Weights.DEFAULT,
+            weights=None,
+            weights_backbone=None,
             trainable_backbone_layers=0,
         )
         num_classes = 2

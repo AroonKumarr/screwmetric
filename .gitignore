@@ -46,4 +46,4 @@ yolov8x-seg.pt
 
 # Temporary / output images
 *.result.jpg
-output_*.jpg
+output_*.jpgmodels/weights/best.pt

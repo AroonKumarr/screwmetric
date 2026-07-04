@@ -18,6 +18,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
+import cv2
 import numpy as np
 
 # Ensure models/ is on sys.path so model_config can be imported
@@ -137,7 +138,8 @@ class ScrewInferenceEngine:
 
         # Re-build model structure matching training
         model = maskrcnn_resnet50_fpn(
-            weights=MaskRCNN_ResNet50_FPN_Weights.DEFAULT,
+            weights=None,
+            weights_backbone=None,
             trainable_backbone_layers=0,
         )
         num_classes = 2  # background (0) + screw (1)
