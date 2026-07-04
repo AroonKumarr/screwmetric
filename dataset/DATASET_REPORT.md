@@ -1,6 +1,6 @@
 # ScrewMetric — Dataset Report
 
-> **Generated:** 2026-07-04 05:14 UTC  
+> **Generated:** 2026-07-04 05:49 UTC  
 > **Project:** ScrewMetric Computer Vision Pipeline  
 > **Purpose:** Screw segmentation and dimension measurement
 
@@ -12,7 +12,7 @@
 |---|---|
 | Total annotated images | **58** |
 | Total annotation instances | **58** |
-| Dataset size on disk | **397.1 MB** |
+| Dataset size on disk | **392.6 MB** |
 | Validation status | ✅ Passed |
 | Validation errors | 0 |
 | Validation warnings | 15 |

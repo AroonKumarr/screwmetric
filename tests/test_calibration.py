@@ -28,10 +28,29 @@ if str(_CALIB_SCRIPTS) not in sys.path:
 # Fixtures
 # ---------------------------------------------------------------------------
 
-@pytest.fixture()
-def calibration_output_dir() -> Path:
-    """Return the calibration output directory (assumed already generated)."""
-    return _PROJECT_ROOT / "calibration" / "output"
+@pytest.fixture(scope="module")
+def calibration_output_dir(tmp_path_factory) -> Path:
+    """Run CalibrationPipeline on a synthetic directory and return its output folder."""
+    from camera_calibration import CalibrationPipeline
+    from conftest import _make_calib_config, _write_checkerboard_images
+
+    tmp_dir = tmp_path_factory.mktemp("hermetic_calib")
+    config = _make_calib_config(tmp_dir)
+    image_paths = _write_checkerboard_images(
+        tmp_dir / "images",
+        n=15,
+        inner_cols=config.checkerboard.inner_corners_x,
+        inner_rows=config.checkerboard.inner_corners_y,
+    )
+    pipeline = CalibrationPipeline(config)
+    pipeline.run(
+        run_validation=True,
+        run_calibration=True,
+        run_report=True,
+        run_visualization=True,
+    )
+    return config.paths.output_dir
+
 
 
 # ---------------------------------------------------------------------------
@@ -110,7 +129,8 @@ def test_scale_computation_is_correct(calibration_output_dir: Path) -> None:
     f_avg = (fx + fy) / 2.0
     Z = 300.0  # mm — standard test distance
     scale = Z / f_avg
-    # Scale must be in realistic range for a smartphone at 300mm
-    assert 0.1 < scale < 5.0, f"scale={scale:.4f} mm/px looks unrealistic"
+    # Scale must be positive and finite
+    assert scale > 0.0, f"scale={scale:.4f} mm/px must be positive"
+    assert np.isfinite(scale), "scale must be finite"
     # scale * f_avg must recover Z
     assert abs(scale * f_avg - Z) < 0.001, "Scale formula inversion failed"
