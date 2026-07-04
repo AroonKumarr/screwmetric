@@ -69,14 +69,11 @@ html, body, p, div, span, h1, h2, h3, h4, h5, h6, label, table, tr, td, th {
 
 /* Sidebar user details profile badge at the bottom */
 .sidebar-profile {
-    position: absolute;
-    bottom: 20px;
-    left: 16px;
-    right: 16px;
     display: flex;
     align-items: center;
     gap: 12px;
     padding: 12px;
+    margin: 16px 0 8px 0;
     background-color: #F8FAFC;
     border: 1px solid #E2E8F0;
     border-radius: 8px;
@@ -316,7 +313,18 @@ html, body, p, div, span, h1, h2, h3, h4, h5, h6, label, table, tr, td, th {
     border-bottom-right-radius: 6px !important;
 }
 
-/* Large premium action buttons styling */
+/* Hide Streamlit file uploader small print (200MB limit, file types) */
+[data-testid="stFileUploaderDropzoneInstructions"] small,
+[data-testid="stFileUploaderDropzoneInstructions"] span:last-child,
+section[data-testid="stFileUploaderDropzone"] small {
+    display: none !important;
+}
+
+/* Fix double-label on file uploader button */
+[data-testid="stFileUploaderDropzone"] button span + span {
+    display: none !important;
+}
+
 .stButton>button {
     background-color: #1D63B8 !important;
     color: #FFFFFF !important;
