@@ -401,7 +401,9 @@ if trigger_btn and loaded_image is not None:
             if load_error or engine is None:
                 raise RuntimeError(f"Model loader failed: {load_error}")
                 
-            engine._config.inference = engine._config.inference.__class__(
+            # ModelConfig is frozen=True, so we must bypass via object.__setattr__
+            # (same pattern used inside ModelPathConfig.__post_init__)
+            new_inference_cfg = engine._config.inference.__class__(
                 confidence_threshold=conf_threshold,
                 device=engine._config.inference.device,
                 iou_threshold=engine._config.inference.iou_threshold,
@@ -409,6 +411,7 @@ if trigger_btn and loaded_image is not None:
                 input_size=engine._config.inference.input_size,
                 class_names=engine._config.inference.class_names,
             )
+            object.__setattr__(engine._config, "inference", new_inference_cfg)
             
             status_text.markdown("⚡ **Step 2/5**: Running instance segmentation inference...")
             progress_bar.progress(45)
