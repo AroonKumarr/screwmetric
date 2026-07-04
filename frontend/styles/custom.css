@@ -331,12 +331,17 @@ html, body, p, div, span, h1, h2, h3, h4, h5, h6, label, table, tr, td, th {
 }
 
 /* Fix: hide duplicate upload button label and 200MB small-print */
-[data-testid="stFileUploaderDropzoneInstructions"] small {
+[data-testid="stFileUploaderDropzoneInstructions"] small,
+[data-testid="stFileUploaderDropzoneInstructions"] span,
+[data-testid="stFileUploaderDropzone"] section small,
+[data-testid="stFileUploaderDropzone"] > div > small,
+.stFileUploader small {
     display: none !important;
 }
-[data-testid="stFileUploaderDropzone"] button span:last-child:not(:first-child) {
+[data-testid="stFileUploaderDropzone"] button span:not(:first-child) {
     display: none !important;
 }
+
 
 /* AI Quality Judgment card styles */
 .judgment-card {

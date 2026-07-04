@@ -334,7 +334,7 @@ with col_workspace_left:
         uploaded_file = st.file_uploader(
             "Upload image file",
             type=["png", "jpg", "jpeg"],
-            label_visibility="collapsed"
+            label_visibility="hidden"
         )
         if uploaded_file is not None:
             try:
