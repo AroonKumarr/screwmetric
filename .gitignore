@@ -20,9 +20,30 @@ env/
 # Logs
 *.log
 
-# Generated outputs
+# Generated outputs (dataset pipeline)
 dataset/previews/
 dataset/splits/
 dataset/validation_report.json
 dataset/dataset_stats.json
+
+# Calibration outputs
 calibration/output/
+
+# Model training artifacts
+models/weights/
+models/logs/
+models/configs/
+
+# MLflow experiment tracking
+runs/
+
+# YOLO base model download cache
+yolov8n-seg.pt
+yolov8s-seg.pt
+yolov8m-seg.pt
+yolov8l-seg.pt
+yolov8x-seg.pt
+
+# Temporary / output images
+*.result.jpg
+output_*.jpg
