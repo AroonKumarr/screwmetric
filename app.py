@@ -336,6 +336,8 @@ with col_workspace_left:
             type=["png", "jpg", "jpeg"],
             label_visibility="hidden"
         )
+        # Show accepted file types next to the uploader for clarity
+        st.markdown("<div class='uploader-hint'>Accepted formats: PNG, JPG, JPEG</div>", unsafe_allow_html=True)
         if uploaded_file is not None:
             try:
                 loaded_image = Image.open(uploaded_file)

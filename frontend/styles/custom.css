@@ -339,7 +339,56 @@ html, body, p, div, span, h1, h2, h3, h4, h5, h6, label, table, tr, td, th {
     display: none !important;
 }
 [data-testid="stFileUploaderDropzone"] button span:not(:first-child) {
+    /* Keep child spans visible but ensure they don't overlap — normalize
+       display and positioning to avoid stacked/duplicated rendering on
+       some browsers. */
+    display: inline-block !important;
+    position: static !important;
+    line-height: 1.2 !important;
+    vertical-align: middle !important;
+}
+
+/* Extra safeguard: make sure uploader instruction small text is hidden
+   while leaving button labels intact. This hides only the small help
+   text (file size / helper) rendered by Streamlit. */
+[data-testid="stFileUploaderDropzoneInstructions"] small,
+[data-testid="stFileUploaderDropzone"] section small,
+[data-testid="stFileUploaderDropzone"] > div > small,
+.stFileUploader small {
     display: none !important;
+}
+
+/* Hide the redundant second span inside the uploader button which in some
+   Streamlit/browser combinations renders a duplicated label text. This
+   removes the overlapping 'upload' duplicate while keeping the main
+   button label visible. */
+[data-testid="stFileUploaderDropzone"] button span:nth-child(2) {
+    display: none !important;
+}
+
+/* Broader rules: some Streamlit versions nest spans/divs differently.
+   Hide any additional span nodes after the first to eliminate duplicates
+   in nested structures, and prevent wrapping/overlap. */
+[data-testid="stFileUploaderDropzone"] button span:nth-of-type(n+2),
+[data-testid="stFileUploaderDropzone"] button div span:nth-of-type(n+2),
+[data-testid="stFileUploaderDropzone"] button span span,
+[data-testid="stFileUploaderDropzone"] button > div > span:nth-of-type(n+2) {
+    display: none !important;
+}
+
+/* Prevent the button label from wrapping or overlapping */
+[data-testid="stFileUploaderDropzone"] button {
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+/* Uploader hint (accepted formats) */
+.uploader-hint {
+    font-size: 0.82rem;
+    color: #64748B;
+    margin-top: 8px;
+    margin-bottom: 6px;
 }
 
 
