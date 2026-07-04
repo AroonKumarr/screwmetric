@@ -67,7 +67,7 @@ screwmetric/
 ├── measurement/
 │   └── pixel_to_mm.py        Metrology engine: pinhole scale + undistortion
 │
-├── tests/                    274 pytest unit and integration tests
+├── tests/                    285 pytest unit and integration tests
 ├── end_to_end_demo.py        Full pipeline CLI script
 ├── run_tests.py              Test runner with coloured summary
 └── requirements.txt
@@ -197,7 +197,7 @@ scale = Z / f_avg  where Z = camera-to-screw distance (mm),  f_avg = (fx + fy) /
 ## Testing
 
 ```bash
-python run_tests.py        # All 274 tests
+python run_tests.py        # All 285 tests
 python run_tests.py -v     # Verbose
 python run_tests.py -k measurement  # Filter by keyword
 ```
