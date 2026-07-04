@@ -422,8 +422,41 @@ if trigger_btn and loaded_image is not None:
             t_elapsed = time.perf_counter() - t_start
             
             if inference_result is None:
-                st.error("⚠️ **No Screw Detected**: Segmenter did not detect any screw in this image above confidence threshold.")
                 st.session_state.current_result = None
+                # Run diagnostic check with ultra-low confidence threshold to identify weak detections
+                diag_inference_cfg = engine._config.inference.__class__(
+                    confidence_threshold=0.01,
+                    device=engine._config.inference.device,
+                    iou_threshold=engine._config.inference.iou_threshold,
+                    max_detections=engine._config.inference.max_detections,
+                    input_size=engine._config.inference.input_size,
+                    class_names=engine._config.inference.class_names,
+                )
+                object.__setattr__(engine._config, "inference", diag_inference_cfg)
+                weak_result = engine.predict(bgr_img)
+                
+                if weak_result is not None:
+                    st.warning(
+                        f"⚠️ **Low Confidence Detection: {weak_result.confidence * 100:.1f}%**\n\n"
+                        f"A screw candidate was found, but its confidence score is **below your setting of {conf_threshold * 100:.1f}%**.\n\n"
+                        "**Possible Diagnostic Issues:**\n"
+                        "1. **Low Contrast**: Dark/rusty screw on dark skin background (low color contrast).\n"
+                        "2. **Poor Lighting**: Excessive shadows or lack of direct illumination.\n"
+                        "3. **Deformed/Dirty Threads**: Corroded screw surface distorting the model's pattern matching.\n\n"
+                        "💡 **How to fix:**\n"
+                        "- Lower the **YOLO Confidence Threshold** slider to see if the segmentation mask is acceptable.\n"
+                        "- Place the screw flat on a high-contrast background (e.g. a plain white paper or white table).\n"
+                        "- Improve illumination or use a clean silver/metallic screw."
+                    )
+                else:
+                    st.error(
+                        "⚠️ **No Screw Detected**\n\n"
+                        "The segmentation model could not identify any screw-like objects in the image, even at a 1% confidence level.\n\n"
+                        "**Troubleshooting Advice:**\n"
+                        "- Ensure the screw is fully in frame and in sharp focus.\n"
+                        "- Avoid extreme angles or holding the screw vertically.\n"
+                        "- Try using a **Sample Image** from the sidebar first to check the pipeline behavior."
+                    )
             else:
                 status_text.markdown("📐 **Step 3/5**: Undistorting lens coordinates...")
                 progress_bar.progress(70)
