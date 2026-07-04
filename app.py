@@ -85,50 +85,68 @@ if "current_result" not in st.session_state:
 if "current_image_name" not in st.session_state:
     st.session_state.current_image_name = ""
 if "theme_mode" not in st.session_state:
-    st.session_state.theme_mode = "Dark"
+    st.session_state.theme_mode = "Light"
 
 # ---------------------------------------------------------------------------
 # Custom Theme Switching (Light/Dark Override CSS)
 # ---------------------------------------------------------------------------
-if st.session_state.theme_mode == "Light":
+if st.session_state.theme_mode == "Dark":
     st.markdown("""
         <style>
         [data-testid="stAppViewContainer"] {
-            background: radial-gradient(circle at 10% 20%, #F1F5F9 0%, #E2E8F0 100%) !important;
-            color: #0F172A !important;
+            background: radial-gradient(circle at 10% 20%, rgba(13, 19, 33, 1) 0%, rgba(8, 12, 21, 1) 90%) !important;
+            color: #F8FAFC !important;
+        }
+        [data-testid="stHeader"] {
+            background-color: rgba(8, 12, 21, 0.6) !important;
+            backdrop-filter: blur(8px) !important;
+            border-bottom: none !important;
         }
         [data-testid="stSidebar"] {
-            background-color: #F8FAFC !important;
-            border-right: 1px solid rgba(0, 0, 0, 0.08) !important;
+            background-color: #090D16 !important;
+            border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
+            box-shadow: none !important;
+        }
+        [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p {
+            color: #E2E8F0 !important;
         }
         .metric-card {
-            background: rgba(255, 255, 255, 0.8) !important;
-            border: 1px solid rgba(0, 0, 0, 0.08) !important;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
+            background: rgba(22, 30, 49, 0.6) !important;
+            border: 1px solid rgba(255, 255, 255, 0.07) !important;
         }
         .metric-value {
-            background: linear-gradient(120deg, #0F172A 0%, #1E293B 100%) !important;
+            background: linear-gradient(120deg, #FFFFFF 0%, #E2E8F0 100%) !important;
             -webkit-background-clip: text !important;
             -webkit-text-fill-color: transparent !important;
         }
-        .metric-label { color: #475569 !important; }
+        .metric-label { color: #94A3B8 !important; }
         .glass-panel {
-            background: rgba(255, 255, 255, 0.6) !important;
-            border: 1px solid rgba(0, 0, 0, 0.06) !important;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
+            background: rgba(22, 30, 49, 0.45) !important;
+            border: 1px solid rgba(255, 255, 255, 0.06) !important;
         }
         .streamlit-expanderHeader {
-            background-color: rgba(255, 255, 255, 0.7) !important;
-            border: 1px solid rgba(0, 0, 0, 0.06) !important;
-            color: #0F172A !important;
+            background-color: rgba(22, 30, 49, 0.5) !important;
+            border: 1px solid rgba(255, 255, 255, 0.05) !important;
+            color: #E2E8F0 !important;
         }
         .streamlit-expanderContent {
-            background-color: rgba(255, 255, 255, 0.4) !important;
-            border-left: 1px solid rgba(0, 0, 0, 0.06) !important;
-            border-right: 1px solid rgba(0, 0, 0, 0.06) !important;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
+            background-color: rgba(13, 20, 35, 0.3) !important;
+            border-left: 1px solid rgba(255, 255, 255, 0.05) !important;
+            border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
         }
-        .hero-subtitle { color: #475569 !important; }
+        .hero-title { color: #FFFFFF !important; }
+        .hero-subtitle { color: #94A3B8 !important; }
+        .workflow-container {
+            background: rgba(13, 19, 33, 0.4) !important;
+            border: 1px solid rgba(255, 255, 255, 0.05) !important;
+        }
+        .step-icon {
+            background: rgba(59, 130, 246, 0.15) !important;
+            border: 1px solid rgba(59, 130, 246, 0.3) !important;
+            color: #60A5FA !important;
+        }
+        .step-label { color: #94A3B8 !important; }
         </style>
     """, unsafe_allow_html=True)
 

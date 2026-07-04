@@ -1,4 +1,4 @@
-/* Custom Styles for ScrewMetric Premium Dashboard */
+/* Light cool-blue/white professional clean theme matching SZABIST TMS color combination */
 
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
 
@@ -7,25 +7,45 @@ html, body, [class*="css"], [class*="st-"] {
     font-family: 'Outfit', sans-serif !important;
 }
 
-/* Background gradient */
+/* Background canvas color (light soft blue-gray) */
 [data-testid="stAppViewContainer"] {
-    background: radial-gradient(circle at 10% 20%, rgba(13, 19, 33, 1) 0%, rgba(8, 12, 21, 1) 90%) !important;
-    color: #F8FAFC !important;
+    background-color: #EBF1F6 !important;
+    color: #1E293B !important;
 }
 
-/* Header style override */
+/* Premium dark blue top-bar style header simulation */
 [data-testid="stHeader"] {
-    background-color: rgba(8, 12, 21, 0.6) !important;
-    backdrop-filter: blur(8px) !important;
+    background-color: #0B2545 !important;
+    border-bottom: 2px solid #134074 !important;
 }
 
-/* Sidebar premium dark styling */
+/* Header text and logo color elements */
+[data-testid="stHeader"] * {
+    color: #FFFFFF !important;
+}
+
+/* Sidebar clean white styling with subtle shadow and border */
 [data-testid="stSidebar"] {
-    background-color: #090D16 !important;
-    border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
+    background-color: #FFFFFF !important;
+    border-right: 1px solid #D5E1EC !important;
+    box-shadow: 2px 0 10px rgba(15, 23, 42, 0.03) !important;
 }
 
-/* Metric card glassmorphism container */
+/* Sidebar labels and links */
+[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p {
+    color: #334155 !important;
+}
+
+/* Sidebar category headers */
+[data-testid="stSidebar"] h3, [data-testid="stSidebar"] h4 {
+    color: #64748B !important;
+    font-size: 0.85rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    font-weight: 600 !important;
+}
+
+/* Metric card: pure white, light border, soft shadow, blue indicator line */
 .metric-container {
     display: flex;
     flex-wrap: wrap;
@@ -35,15 +55,13 @@ html, body, [class*="css"], [class*="st-"] {
 
 .metric-card {
     flex: 1;
-    min-width: 140px;
-    background: rgba(22, 30, 49, 0.6);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.07);
-    border-radius: 14px;
-    padding: 18px;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    min-width: 160px;
+    background: #FFFFFF;
+    border: 1px solid #D5E0EB;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(30, 41, 59, 0.04);
+    transition: all 0.25s ease-out;
     position: relative;
     overflow: hidden;
 }
@@ -55,88 +73,81 @@ html, body, [class*="css"], [class*="st-"] {
     left: 0;
     width: 4px;
     height: 100%;
-    background: linear-gradient(180deg, #3B82F6 0%, #10B981 100%);
-    opacity: 0.8;
+    background: #1D63B8; /* Active deep blue */
+    opacity: 0.95;
 }
 
 .metric-card:hover {
-    transform: translateY(-4px);
-    border-color: rgba(59, 130, 246, 0.4);
-    box-shadow: 0 12px 40px 0 rgba(59, 130, 246, 0.15);
+    transform: translateY(-3px);
+    border-color: #B9D2EB;
+    box-shadow: 0 8px 24px rgba(30, 41, 59, 0.08);
 }
 
 .metric-label {
-    font-size: 0.85rem;
-    color: #94A3B8;
+    font-size: 0.78rem;
+    color: #64748B;
     text-transform: uppercase;
-    letter-spacing: 0.075em;
-    font-weight: 500;
+    letter-spacing: 0.05em;
+    font-weight: 600;
 }
 
 .metric-value {
-    font-size: 1.85rem;
+    font-size: 1.75rem;
     font-weight: 700;
-    color: #F8FAFC;
+    color: #0F172A;
     margin-top: 4px;
     line-height: 1.2;
-    background: linear-gradient(120deg, #FFFFFF 0%, #E2E8F0 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
 }
 
 .metric-sub {
     font-size: 0.75rem;
-    color: #64748B;
+    color: #94A3B8;
     margin-top: 6px;
     display: flex;
     align-items: center;
     gap: 4px;
 }
 
-/* Gradient Hero text */
+/* Premium Typography for Hero Section */
 .hero-title {
-    font-size: 2.8rem !important;
-    font-weight: 800 !important;
-    background: linear-gradient(135deg, #60A5FA 0%, #34D399 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin-bottom: 0.5rem !important;
+    font-size: 2.5rem !important;
+    font-weight: 700 !important;
+    color: #0F172A !important;
+    margin-bottom: 0.4rem !important;
     letter-spacing: -0.02em;
-    animation: fadeIn 0.8s ease-out;
 }
 
 .hero-subtitle {
-    font-size: 1.15rem !important;
-    color: #94A3B8 !important;
+    font-size: 1.05rem !important;
+    color: #475569 !important;
     margin-bottom: 2rem !important;
     font-weight: 400;
-    line-height: 1.5;
+    line-height: 1.45;
 }
 
-/* Beautiful custom boxes and panels */
+/* Main white glass-like card panel content boxes */
 .glass-panel {
-    background: rgba(22, 30, 49, 0.45);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    border-radius: 16px;
+    background: #FFFFFF;
+    border: 1px solid #D5E0EB;
+    border-radius: 14px;
     padding: 24px;
     margin-bottom: 20px;
-    box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 15px rgba(30, 41, 59, 0.04);
 }
 
-/* Workflow Flowchart Styles */
+/* Workflow Flowchart Styles with cool gray-blue icons */
 .workflow-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: rgba(13, 19, 33, 0.4);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: #FFFFFF;
+    border: 1px solid #DCE6F0;
     border-radius: 12px;
     padding: 16px;
     margin-bottom: 30px;
     overflow-x: auto;
     gap: 8px;
+    box-shadow: 0 2px 10px rgba(30, 41, 59, 0.03);
 }
 
 .workflow-step {
@@ -145,106 +156,116 @@ html, body, [class*="css"], [class*="st-"] {
     align-items: center;
     text-align: center;
     flex: 1;
-    min-width: 90px;
+    min-width: 95px;
 }
 
 .step-icon {
-    width: 38px;
-    height: 38px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
-    background: rgba(59, 130, 246, 0.15);
-    border: 1px solid rgba(59, 130, 246, 0.3);
-    color: #60A5FA;
+    background: #E0ECFB;
+    border: 1px solid #B9D2EB;
+    color: #1D63B8;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: 600;
-    font-size: 0.95rem;
+    font-weight: 700;
+    font-size: 0.9rem;
     margin-bottom: 8px;
-    transition: all 0.3s ease;
+    transition: all 0.25s ease;
 }
 
 .workflow-step:hover .step-icon {
-    background: rgba(59, 130, 246, 0.35);
-    border-color: #60A5FA;
-    box-shadow: 0 0 12px rgba(59, 130, 246, 0.4);
+    background: #1D63B8;
+    border-color: #1D63B8;
+    color: #FFFFFF;
+    box-shadow: 0 0 10px rgba(29, 99, 184, 0.25);
 }
 
 .step-label {
-    font-size: 0.72rem;
-    font-weight: 500;
-    color: #94A3B8;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #475569;
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
 
 .step-arrow {
-    color: rgba(255, 255, 255, 0.15);
-    font-size: 1.2rem;
+    color: #CBD5E1;
+    font-size: 1.1rem;
     font-weight: bold;
 }
 
 /* Alert styling overrides */
 .stAlert {
-    border-radius: 12px !important;
-    background-color: rgba(22, 30, 49, 0.7) !important;
-    border: 1px solid rgba(255, 255, 255, 0.08) !important;
-    backdrop-filter: blur(8px) !important;
+    border-radius: 10px !important;
+    background-color: #F8FAFC !important;
+    border: 1px solid #E2E8F0 !important;
+    color: #334155 !important;
 }
 
-/* Expander custom design */
+/* Expander custom clean white design */
 .streamlit-expanderHeader {
-    background-color: rgba(22, 30, 49, 0.5) !important;
-    border: 1px solid rgba(255, 255, 255, 0.05) !important;
-    border-radius: 10px !important;
-    color: #E2E8F0 !important;
+    background-color: #FFFFFF !important;
+    border: 1px solid #DCE6F0 !important;
+    border-radius: 8px !important;
+    color: #1E293B !important;
     font-weight: 500 !important;
+    box-shadow: 0 2px 5px rgba(30, 41, 59, 0.02) !important;
 }
 
 .streamlit-expanderContent {
-    background-color: rgba(13, 20, 35, 0.3) !important;
-    border-left: 1px solid rgba(255, 255, 255, 0.05) !important;
-    border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
-    border-bottom-left-radius: 10px !important;
-    border-bottom-right-radius: 10px !important;
+    background-color: #F8FAFC !important;
+    border-left: 1px solid #DCE6F0 !important;
+    border-right: 1px solid #DCE6F0 !important;
+    border-bottom: 1px solid #DCE6F0 !important;
+    border-bottom-left-radius: 8px !important;
+    border-bottom-right-radius: 8px !important;
 }
 
-/* Animations */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.animated-fade-in {
-    animation: fadeIn 0.5s ease-out forwards;
-}
-
-/* Custom Status Indicator Badge */
+/* Interactive Status Badge overlays */
 .status-badge {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    padding: 4px 10px;
+    padding: 6px 12px;
     border-radius: 20px;
-    font-size: 0.78rem;
-    font-weight: 500;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .status-badge-success {
-    background-color: rgba(16, 185, 129, 0.12);
-    color: #34D399;
-    border: 1px solid rgba(16, 185, 129, 0.25);
+    background-color: #E6FDF4;
+    color: #0E9F6E;
+    border: 1px solid #BCF0DA;
 }
 
 .status-badge-warning {
-    background-color: rgba(245, 158, 11, 0.12);
-    color: #FBBF24;
-    border: 1px solid rgba(245, 158, 11, 0.25);
+    background-color: #FEF3C7;
+    color: #D97706;
+    border: 1px solid #FDE68A;
 }
 
 .status-badge-error {
-    background-color: rgba(239, 68, 68, 0.12);
-    color: #FCA5A5;
-    border: 1px solid rgba(239, 68, 68, 0.25);
+    background-color: #FDF2F2;
+    color: #E02424;
+    border: 1px solid #FBD5D5;
+}
+
+/* Standard elements override style */
+.stButton>button {
+    background-color: #1D63B8 !important;
+    color: #FFFFFF !important;
+    border-radius: 8px !important;
+    border: none !important;
+    font-weight: 600 !important;
+    transition: all 0.2s ease !important;
+}
+
+.stButton>button:hover {
+    background-color: #154D92 !important;
+    box-shadow: 0 4px 12px rgba(29, 99, 184, 0.2) !important;
 }
