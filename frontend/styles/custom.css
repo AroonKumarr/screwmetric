@@ -1,10 +1,10 @@
 /* Light cool-blue/white professional clean theme matching SZABIST TMS color combination */
 
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
-/* Main font overrides */
-html, body, [class*="css"], [class*="st-"] {
-    font-family: 'Outfit', sans-serif !important;
+/* Typography reset (avoiding [class*="st-"] wildcards that break file uploader UI text) */
+html, body, p, div, span, h1, h2, h3, h4, h5, h6, label, table, tr, td, th {
+    font-family: 'Inter', sans-serif !important;
 }
 
 /* Background canvas color (light soft blue-gray) */
@@ -13,205 +13,298 @@ html, body, [class*="css"], [class*="st-"] {
     color: #1E293B !important;
 }
 
-/* Premium dark blue top-bar style header simulation */
+/* Top Navigation Bar styling */
 [data-testid="stHeader"] {
-    background-color: #0B2545 !important;
+    background-color: #0A2240 !important;
     border-bottom: 2px solid #134074 !important;
+    height: 60px !important;
 }
 
-/* Header text and logo color elements */
 [data-testid="stHeader"] * {
     color: #FFFFFF !important;
 }
 
-/* Sidebar clean white styling with subtle shadow and border */
+/* Sidebar clean white navigation design */
 [data-testid="stSidebar"] {
     background-color: #FFFFFF !important;
-    border-right: 1px solid #D5E1EC !important;
-    box-shadow: 2px 0 10px rgba(15, 23, 42, 0.03) !important;
+    border-right: 1px solid #DCE5EE !important;
+    box-shadow: 2px 0 10px rgba(15, 23, 42, 0.02) !important;
 }
 
-/* Sidebar labels and links */
-[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p {
-    color: #334155 !important;
-}
-
-/* Sidebar category headers */
-[data-testid="stSidebar"] h3, [data-testid="stSidebar"] h4 {
-    color: #64748B !important;
-    font-size: 0.85rem !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.05em !important;
-    font-weight: 600 !important;
-}
-
-/* Metric card: pure white, light border, soft shadow, blue indicator line */
-.metric-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-    margin-bottom: 24px;
-}
-
-.metric-card {
-    flex: 1;
-    min-width: 160px;
-    background: #FFFFFF;
-    border: 1px solid #D5E0EB;
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0 4px 15px rgba(30, 41, 59, 0.04);
-    transition: all 0.25s ease-out;
-    position: relative;
-    overflow: hidden;
-}
-
-.metric-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 4px;
-    height: 100%;
-    background: #1D63B8; /* Active deep blue */
-    opacity: 0.95;
-}
-
-.metric-card:hover {
-    transform: translateY(-3px);
-    border-color: #B9D2EB;
-    box-shadow: 0 8px 24px rgba(30, 41, 59, 0.08);
-}
-
-.metric-label {
-    font-size: 0.78rem;
-    color: #64748B;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    font-weight: 600;
-}
-
-.metric-value {
-    font-size: 1.75rem;
-    font-weight: 700;
-    color: #0F172A;
-    margin-top: 4px;
-    line-height: 1.2;
-}
-
-.metric-sub {
+/* Sidebar navigation labels */
+.nav-section-title {
     font-size: 0.75rem;
+    font-weight: 700;
     color: #94A3B8;
-    margin-top: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin: 20px 0 8px 12px;
+}
+
+.nav-item {
     display: flex;
     align-items: center;
-    gap: 4px;
+    padding: 10px 16px;
+    font-size: 0.9rem;
+    color: #475569;
+    font-weight: 500;
+    border-radius: 6px;
+    margin: 2px 8px;
+    transition: all 0.2s ease;
+    cursor: pointer;
 }
 
-/* Premium Typography for Hero Section */
-.hero-title {
-    font-size: 2.5rem !important;
-    font-weight: 700 !important;
-    color: #0F172A !important;
-    margin-bottom: 0.4rem !important;
-    letter-spacing: -0.02em;
+.nav-item:hover {
+    background-color: #F1F5F9;
+    color: #1E293B;
 }
 
-.hero-subtitle {
-    font-size: 1.05rem !important;
-    color: #475569 !important;
-    margin-bottom: 2rem !important;
-    font-weight: 400;
-    line-height: 1.45;
+.nav-item-active {
+    background-color: #E0ECFB !important;
+    color: #1D63B8 !important;
+    font-weight: 600 !important;
+    border-left: 4px solid #1D63B8;
+    border-radius: 0 6px 6px 0 !important;
 }
 
-/* Main white glass-like card panel content boxes */
-.glass-panel {
-    background: #FFFFFF;
-    border: 1px solid #D5E0EB;
-    border-radius: 14px;
-    padding: 24px;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 15px rgba(30, 41, 59, 0.04);
-}
-
-/* Workflow Flowchart Styles with cool gray-blue icons */
-.workflow-container {
+/* Sidebar user details profile badge at the bottom */
+.sidebar-profile {
+    position: absolute;
+    bottom: 20px;
+    left: 16px;
+    right: 16px;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    background: #FFFFFF;
-    border: 1px solid #DCE6F0;
-    border-radius: 12px;
-    padding: 16px;
-    margin-bottom: 30px;
-    overflow-x: auto;
-    gap: 8px;
-    box-shadow: 0 2px 10px rgba(30, 41, 59, 0.03);
+    gap: 12px;
+    padding: 12px;
+    background-color: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
 }
 
-.workflow-step {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    flex: 1;
-    min-width: 95px;
-}
-
-.step-icon {
+.profile-avatar {
     width: 36px;
     height: 36px;
     border-radius: 50%;
-    background: #E0ECFB;
-    border: 1px solid #B9D2EB;
+    background-color: #E0ECFB;
     color: #1D63B8;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 700;
     font-size: 0.9rem;
-    margin-bottom: 8px;
-    transition: all 0.25s ease;
 }
 
-.workflow-step:hover .step-icon {
-    background: #1D63B8;
-    border-color: #1D63B8;
-    color: #FFFFFF;
-    box-shadow: 0 0 10px rgba(29, 99, 184, 0.25);
+.profile-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #1E293B;
+}
+
+.profile-role {
+    font-size: 0.7rem;
+    color: #64748B;
+}
+
+/* Breadcrumb Sub-Header Bar style */
+.breadcrumb-bar {
+    background-color: #FFFFFF;
+    border: 1px solid #DCE5EE;
+    border-radius: 10px;
+    padding: 14px 20px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(30, 41, 59, 0.02);
+}
+
+.breadcrumb-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #0F172A;
+    margin: 0;
+}
+
+.breadcrumb-path {
+    font-size: 0.8rem;
+    color: #64748B;
+    margin-top: 2px;
+}
+
+/* Row of 4 Metric Cards (Professional layout matching TMS screenshot) */
+.metric-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+    width: 100%;
+}
+
+.metric-card {
+    background: #FFFFFF;
+    border: 1px solid #DCE5EE;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(30, 41, 59, 0.02);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+}
+
+.metric-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+}
+
+.metric-card-blue::after { background-color: #1D63B8; }
+.metric-card-green::after { background-color: #10B981; }
+.metric-card-orange::after { background-color: #F59E0B; }
+.metric-card-purple::after { background-color: #8B5CF6; }
+
+.metric-card-left {
+    display: flex;
+    flex-direction: column;
+}
+
+.metric-card-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #0F172A;
+    line-height: 1.2;
+}
+
+.metric-card-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #64748B;
+    margin-top: 4px;
+}
+
+.metric-card-sub {
+    font-size: 0.72rem;
+    color: #94A3B8;
+    margin-top: 2px;
+}
+
+.metric-card-icon {
+    font-size: 1.8rem;
+    opacity: 0.85;
+}
+
+.icon-blue { color: #1D63B8; }
+.icon-green { color: #10B981; }
+.icon-orange { color: #F59E0B; }
+.icon-purple { color: #8B5CF6; }
+
+/* Main white container panel cards */
+.glass-panel {
+    background: #FFFFFF;
+    border: 1px solid #DCE5EE;
+    border-radius: 10px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 12px rgba(30, 41, 59, 0.02);
+}
+
+.glass-panel-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #0F172A;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid #F1F5F9;
+    padding-bottom: 10px;
+}
+
+/* Clean pipeline flowchart style bar */
+.workflow-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #FFFFFF;
+    border: 1px solid #DCE5EE;
+    border-radius: 10px;
+    padding: 16px 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(30, 41, 59, 0.02);
+}
+
+.workflow-step {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.step-number {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background-color: #E0ECFB;
+    color: #1D63B8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.8rem;
 }
 
 .step-label {
-    font-size: 0.7rem;
+    font-size: 0.8rem;
     font-weight: 600;
     color: #475569;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
 }
 
 .step-arrow {
     color: #CBD5E1;
     font-size: 1.1rem;
-    font-weight: bold;
+    font-weight: 500;
 }
 
-/* Alert styling overrides */
-.stAlert {
-    border-radius: 10px !important;
-    background-color: #F8FAFC !important;
-    border: 1px solid #E2E8F0 !important;
-    color: #334155 !important;
+/* Custom Status Badge overrides */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+
+.status-badge-success {
+    background-color: #DEF7EC;
+    color: #03543F;
+    border: 1px solid #C3DDFD;
+}
+
+.status-badge-error {
+    background-color: #FDE8E8;
+    color: #9B1C1C;
 }
 
 /* Expander custom clean white design */
 .streamlit-expanderHeader {
     background-color: #FFFFFF !important;
     border: 1px solid #DCE6F0 !important;
-    border-radius: 8px !important;
+    border-radius: 6px !important;
     color: #1E293B !important;
-    font-weight: 500 !important;
-    box-shadow: 0 2px 5px rgba(30, 41, 59, 0.02) !important;
+    font-weight: 600 !important;
 }
 
 .streamlit-expanderContent {
@@ -219,53 +312,23 @@ html, body, [class*="css"], [class*="st-"] {
     border-left: 1px solid #DCE6F0 !important;
     border-right: 1px solid #DCE6F0 !important;
     border-bottom: 1px solid #DCE6F0 !important;
-    border-bottom-left-radius: 8px !important;
-    border-bottom-right-radius: 8px !important;
+    border-bottom-left-radius: 6px !important;
+    border-bottom-right-radius: 6px !important;
 }
 
-/* Interactive Status Badge overlays */
-.status-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    margin-bottom: 8px;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.status-badge-success {
-    background-color: #E6FDF4;
-    color: #0E9F6E;
-    border: 1px solid #BCF0DA;
-}
-
-.status-badge-warning {
-    background-color: #FEF3C7;
-    color: #D97706;
-    border: 1px solid #FDE68A;
-}
-
-.status-badge-error {
-    background-color: #FDF2F2;
-    color: #E02424;
-    border: 1px solid #FBD5D5;
-}
-
-/* Standard elements override style */
+/* Large premium action buttons styling */
 .stButton>button {
     background-color: #1D63B8 !important;
     color: #FFFFFF !important;
-    border-radius: 8px !important;
+    border-radius: 6px !important;
     border: none !important;
     font-weight: 600 !important;
+    padding: 10px 24px !important;
     transition: all 0.2s ease !important;
+    box-shadow: 0 2px 6px rgba(29, 99, 184, 0.15) !important;
 }
 
 .stButton>button:hover {
     background-color: #154D92 !important;
-    box-shadow: 0 4px 12px rgba(29, 99, 184, 0.2) !important;
+    box-shadow: 0 4px 12px rgba(29, 99, 184, 0.25) !important;
 }
