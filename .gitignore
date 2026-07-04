@@ -46,4 +46,8 @@ yolov8x-seg.pt
 
 # Temporary / output images
 *.result.jpg
-output_*.jpgmodels/weights/best.pt
+output_*.jpg
+
+# Model weight files (too large for GitHub — 100MB limit)
+models/weights/*.pt
+models/logs/**/weights/*.pt
