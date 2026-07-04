@@ -396,12 +396,12 @@ with col_workspace_right:
         help="Minimum confidence value required for YOLOv8 segment detection."
     )
     
-    with st.expander("👁️ Visualization Overlays", expanded=False):
-        show_mask = st.checkbox("Overlay Segmentation Mask", value=True)
-        show_contour = st.checkbox("Overlay Contour Outline", value=True)
-        show_bbox = st.checkbox("Overlay Fitted Rotated BBox", value=True)
-        show_dimensions = st.checkbox("Overlay Dimension Annotations", value=True)
-    
+    # Overlays always enabled — no UI controls exposed
+    show_mask = True
+    show_contour = True
+    show_bbox = True
+    show_dimensions = True
+
     st.markdown("</div>", unsafe_allow_html=True)
 
 # ---------------------------------------------------------------------------
